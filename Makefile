@@ -5,27 +5,22 @@
 ## Makefile
 ##
 
-SRC = $(wildcard *.c)
-OBJ = $(SRC:.c=.o)
-NAME = choco_juan
-TEST_SRC = $(wildcard tests/*.c)
-TEST_OBJ = $(TEST_SRC:.c=.o)
-TEST_NAME = test_unitaire
-CFLAGS = -I include/
+#SRC =   *.c
+SRC =   $(wildcard *.c)
 
-all: $(NAME)
+OBJ =   $(patsubst %.c, %.o, $(SRC))
+
+NAME =   choco_juan
+
+all:    $(NAME)
 
 $(NAME): $(OBJ)
-	gcc -o $(NAME) $(OBJ) $(CFLAGS)
-
-test: $(TEST_OBJ) $(OBJ)
-	gcc -o $(TEST_NAME) $(OBJ) $(TEST_OBJ) $(CFLAGS)
-	./$(TEST_NAME)
+		gcc -o $(NAME) $(OBJ)
 
 clean:
-	rm -f $(OBJ) $(TEST_OBJ)
+		rm -f *.o
 
 fclean: clean
-	rm -f $(NAME) $(TEST_NAME)
+		rm -f $(NAME)
 
 re: fclean all
