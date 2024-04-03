@@ -78,19 +78,17 @@ jobs:
           IFS=$OIFS
 
   run_tests:
-  needs: [check_program_compilation]
-  name: "Runs tests with Unity"
-  runs-on: ubuntu-latest
-  container:
-    image: epitechcontent/epitest-docker:latest
+    needs: [check_program_compilation]
+    name: "Runs tests with criterion"
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
 
-  steps:
-    - uses: actions/checkout@v4
-    - name: Build and run tests with Unity
-      run: |
-        gcc -o test_unitaire test.c unity.c
-        ./test_unitaire
-
+    steps:
+      - uses: actions/checkout@v4
+      - id: run_tests
+        run: make tests_run
+        timeout-minutes: 2
 
   push_to_mirror:
     needs: [run_tests]
