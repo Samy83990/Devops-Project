@@ -11,7 +11,7 @@ on:
 env:
   MIRROR_URL: vars.MIRR_VAR
   GIT_SSH_PRIVATE_KEY: secrets.KEYSSH
-  EXECUTABLES: "binary"
+  EXECUTABLES: "choco_juan"
   ARGUMENTS: ""
 
 jobs:
@@ -97,7 +97,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: pixta-dev/repository-mirroring-action@v1

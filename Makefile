@@ -18,7 +18,7 @@ $(NAME): $(OBJ)
 		gcc -o $(NAME) $(OBJ)
 
 clean:
-		rm -f $ *.o
+		rm -f *.o
 
 fclean: clean
 		rm -f $(NAME)
