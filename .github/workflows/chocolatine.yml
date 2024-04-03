@@ -1,0 +1,108 @@
+name: chocolatine
+
+on:
+  push:
+    branches-ignore:
+    - "ga-ignore-*"
+  pull_request:
+    branches-ignore:
+    - "ga-ignore-*"
+
+env:
+  MIRROR_URL: vars.MIRR_VAR
+  GIT_SSH_PRIVATE_KEY: secrets.KEYSSH
+  EXECUTABLES: "binary"
+  ARGUMENTS: ""
+
+jobs:
+  check_coding_style:
+    name: "Check CodingStyle"
+    runs-on: ubuntu-latest
+    container: ghcr.io/epitech/coding-style-checker:latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: check_coding_style
+        run: |
+          check.sh $(pwd) $(pwd)
+          CODING_STYLE_ERRORS=$(cat $(pwd)/coding-style-reports.log)
+          for ERRORS in $CODING_STYLE_ERRORS; do
+            array=(`echo $ERRORS | sed 's/:/\n/g'`)
+            echo "::error file=${array[1]#./},title=${array[3]#./} coding style errors detected: ${array[2]#./}::${array[4]#./}"
+          done
+          if [[ -n $CODING_STYLE_ERRORS ]]
+          then
+            exit 1
+          else
+            echo No coding style errors detected
+          fi
+  
+
+  check_repo:
+    name: "CheckRepo"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: check_repo
+        run: |
+          UNWANTED_FILES=$(find . -type f -not -path "./git/*" -wholename "*tmp/*" -or -name "*~" -or -name "*.o" -or -name "*.so" -or -name "*.gcno" -or -name "*.gcda" -or -name "*#" -or -name "#*" -or -name "*.gcov" -or -name "*pain_au_chocolat*")
+          for FILES in $UNWANTED_FILES; do
+            echo "::error file=${FILES#./},title=Unwanted file detected::${FILES#./}"
+          done
+          if [[ -n $UNWANTED_FILES ]]
+          then
+            exit 1
+          else
+            echo No unwanted files detected
+          fi
+
+  check_program_compilation:
+    needs: [check_repo]
+    name: "Check Make Compil"
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - id: check_program_compilation
+        run: make
+        timeout-minutes: 2
+      - run: make clean
+      - run: |
+          OIFS=$IFS
+          IFS=','
+          for x in $EXECUTABLES
+            do
+              ./$x $ARGUMENTS
+            done
+          IFS=$OIFS
+
+  run_tests:
+    needs: [check_program_compilation]
+    name: "Runs tests with criterion"
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - id: run_tests
+        run: make tests_run
+        timeout-minutes: 2
+
+  push_to_mirror:
+    needs: [run_tests]
+    if: ${{ github.event_name == 'push' }}
+    name: "Push all files to mirror specified"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url:
+            ${{ env.MIRROR_URL }}
+          ssh_private_key:
+            ${{ secrets.GIT_SSH_PRIVATE_KEY }}
