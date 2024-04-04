@@ -17,6 +17,9 @@ all:    $(NAME)
 $(NAME): $(OBJ)
 		gcc -o $(NAME) $(OBJ)
 
+test_run:	$(OBJ)
+	gcc $(SRC) -o $(NAME)
+	make clean
 clean:
 		rm -f *.o
 
