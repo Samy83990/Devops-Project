@@ -79,7 +79,7 @@ jobs:
 
   run_tests:
     needs: [check_program_compilation]
-    name: "Runs tests with criterion"
+    name: "Runs tests"
     runs-on: ubuntu-latest
     container:
       image: epitechcontent/epitest-docker:latest
@@ -89,6 +89,7 @@ jobs:
       - id: run_tests
         run: make tests_run
         timeout-minutes: 2
+        working directory: ${{ github.workspace }}
 
   push_to_mirror:
     needs: [run_tests]

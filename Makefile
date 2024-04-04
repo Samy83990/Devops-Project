@@ -10,7 +10,7 @@ SRC =   $(wildcard *.c)
 
 OBJ =   $(patsubst %.c, %.o, $(SRC))
 
-NAME =   choco_juan
+NAME =   test_run
 
 all:    $(NAME)
 
@@ -24,3 +24,4 @@ fclean: clean
 		rm -f $(NAME)
 
 re: fclean all
+
