@@ -9,7 +9,7 @@ on:
       - "ga-ignore-*"
 
 env:
-  MIRROR_URL: vars.MIRR_VAR
+  MIRROR_URL: ${{ vars.MIRR_VAR }}
   GIT_SSH_PRIVATE_KEY: secrets.KEYSSH
   EXECUTABLES: "test_run"
   ARGUMENTS: ""
