@@ -1,29 +1,23 @@
 ##
-## EPITECH PROJECT, 2023
-## B-CPE-101-MAR-1-1-myprintf-samy.chakrouni
+## EPITECH PROJECT, 2024
+## CHOCOLATINE_TEST-1
 ## File description:
 ## Makefile
 ##
 
-#SRC =   *.c
-SRC =   $(wildcard *.c)
+SRC = $(wildcard *.c)
+OBJ = $(SRC:.c=.o)
+NAME = test_run
 
-OBJ =   $(patsubst %.c, %.o, $(SRC))
-
-NAME =   test_run
-
-all:    $(NAME)
+all: $(NAME)
 
 $(NAME): $(OBJ)
-		gcc -o $(NAME) $(OBJ)
+	gcc -o $(NAME) $(OBJ)
 
-test_run:	$(OBJ)
-	gcc $(SRC) -o $(NAME)
-	make clean
 clean:
-		rm -f *.o
+	rm -f $(OBJ)
 
 fclean: clean
-		rm -f $(NAME)
+	rm -f $(NAME)
 
 re: fclean all

@@ -86,7 +86,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: run_tests
-        run: make tests_run
+        run: make test_run
         timeout-minutes: 2
         working-directory: ${{ github.workspace }}
 
