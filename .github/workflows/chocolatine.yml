@@ -11,7 +11,7 @@ on:
 env:
   MIRROR_URL: vars.MIRR_VAR
   GIT_SSH_PRIVATE_KEY: secrets.KEYSSH
-  EXECUTABLES: "choco_juan"
+  EXECUTABLES: "test_run"
   ARGUMENTS: ""
 
 jobs:
